@@ -1,0 +1,197 @@
+<odoo>
+  <data>
+
+      <record id="view_student_graph" model="ir.ui.view">
+
+        <field name="name">Student</field>
+        <field name="model">hr.student</field>
+
+        <field name="arch" type="xml">
+
+            <graph string="year_gender" type="line">
+
+                <field name="year" type="col"/>
+
+                <field name="gender" type="measure"/>
+
+            </graph>
+
+        </field>
+
+       </record>
+
+
+   <record id="hr_student_search" model="ir.ui.view">
+        <field name="name">Student</field>
+        <field name="model">hr.student</field>
+        <field name='arch' type='xml'>
+            <search string=''>
+
+                <field name="First_Name"/>
+                <field name="Last_Name"/>
+                <filter name='filter_gender' string='Male' domain="[('gender','=','male')]"/>
+                <group string='Group By'>
+                    <filter name='by_year' string='year' context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+
+    <record id="hr_student_form" model="ir.ui.view">
+        <field name="name">Student</field>
+        <field name="model">hr.student</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header >
+                    <button name="action_valid" string="Valid" class="oe_highlight" states="draft" type="object"/>
+                    <button name="action_invalid" string="invalid" class="oe_highlight" states="draft" type="object"/>
+                    <button name="action_draft" string="set draft" class="oe_highlight" states="validated,invaladated" type="object"/>
+                    <button name="action_gradute" string="gradute" class="oe_highlight" states="validated" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated,invaladated,graduated" statusbar_colors="{'KEY_IS_STATE':'VALUE_IS_COLOR'}"/>
+                </header>
+                <sheet>
+                    <group>
+                      <group>
+                          <field name="code" />
+                          <field name="nat_id"/>
+                         <field name="First_Name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                         <field name="Last_Name">'Last name'</field>
+                         <field name="PhoneNum">'Phone Number'</field>
+                          <field name="course_ids" widget="many2many_tags"/>
+                          <field name="grade_id"/>
+                      </group>
+                        <group>
+                         <field name="birthdate"/>
+                         <field name="age"/>
+                         <field name="Mail">Mail</field>
+                         <field name="year"/>
+                         <field name="department_id" options="{'no_create':True,'no_open':True}" domain="[('year','=',year)]"/>
+                          <field name="gender"/>
+                            <field name="active"/>
+                            <field name="total"/>
+                            <field name="pre_degree"/>
+
+
+                      </group>
+
+
+                    </group>
+                    <notebook>
+                        <page string="degree">
+                        <field name="degree_ids">
+                            <tree editable="top">
+                                <field name="course_name"/>
+                                <field name="degree" sum="total"/>
+
+
+                            </tree>
+                            <form>
+                                <group>
+                                  <field name="course_name"/>
+                                  <field name="degree"/>
+                                </group>
+                            </form>
+
+                        </field>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+
+
+    <record id="hr_student_tree" model="ir.ui.view">
+        <field name="name">Student</field>
+        <field name="model">hr.student</field>
+        <field name="arch" type="xml">
+            <tree string="">
+              <field name="First_Name"></field>
+              <field name="Last_Name"></field>
+              <field name="PhoneNum"></field>
+              <field name="birthdate"></field>
+              <field name="Mail"></field>
+              <field name="department_id" />
+
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_dept" model="ir.actions.act_window">
+        <field name="name"></field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.department</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            <!-- Add Text Here -->
+          </p><p>
+            <!-- More details about what a user can do with this object will be OK -->
+          </p>
+        </field>
+    </record>
+
+
+
+
+
+
+    <record id="view_hr_student_action" model="ir.actions.act_window">
+        <field name="name">student</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.student</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            <!-- Add Text Here -->
+          click here to register
+            <!-- More details about what a user can do with this object will be OK -->
+          </p>
+        </field>
+    </record>
+
+      <record id="view_degree" model="ir.actions.act_window">
+          <field name="name"></field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">student.degree</field>
+          <field name="view_mode">tree,form</field>
+          <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+              <!-- Add Text Here -->
+            </p><p>
+              <!-- More details about what a user can do with this object will be OK -->
+            </p>
+          </field>
+      </record>
+
+
+    <menuitem id="hr_student_root" name="Student" sequence="3"/>
+    <!-- This Menu Item Must have a parent -->
+    <menuitem id="hr_student_categ" name="Student" parent="hr_student_root" sequence="3"/>
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="hr_student_action" name="StudentRequest" parent="hr_student_categ" action="view_hr_student_action" sequence="2"/>
+
+    <!-- This Menu Item Must have a parent -->
+
+      <!-- This Menu Item Must have a parent -->
+      <menuitem id="hr_degree_categ" name="degree" parent="hr_student_root" sequence="6"/>
+      <!-- This Menu Item must have a parent and an action -->
+      <menuitem id="hr_degree_action" name="dgree r" parent="hr_degree_categ" action="view_degree" sequence="3"/>
+
+      <!-- This Menu Item Must have a parent -->
+      <menuitem id="hr_department_categ" name="Dept" parent="hr_student_root" sequence="5"/>
+      <!-- This Menu Item must have a parent and an action -->
+      <menuitem id="hr_depart_action" name="dept req" parent="hr_department_categ" action="view_dept" sequence="6"/>
+
+
+  </data>
+</odoo>
